@@ -298,9 +298,11 @@ class LogtoClient
       throw new LogtoException('Sign-in session not found.');
     }
 
+    $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? parse_url($_SERVER['REQUEST_URI'], PHP_URL_HOST);
+
     // Some loose checks
     if (
-      parse_url($signInSession->redirectUri, PHP_URL_HOST) !== ($_SERVER['SERVER_NAME'] ?? null) ||
+      parse_url($signInSession->redirectUri, PHP_URL_HOST) !== $host ||
       parse_url($signInSession->redirectUri, PHP_URL_PATH) !== parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
     ) {
       throw new LogtoException('The redirect URI in the sign-in session does not match the current request.');

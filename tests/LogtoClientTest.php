@@ -165,6 +165,14 @@ final class LogtoClientTest extends TestCase
     $this->expectException(LogtoException::class);
     $this->expectExceptionMessage("The redirect URI in the sign-in session does not match the current request.");
     $client->handleSignInCallback();
+
+    // Test for environments which do not set SERVER_NAME.
+    unset($_SERVER['SERVER_NAME']);
+    $_SERVER['REQUEST_URI'] = 'https://localhost/foo';
+
+    $this->expectException(LogtoException::class);
+    $this->expectExceptionMessage("The redirect URI in the sign-in session does not match the current request.");
+    $client->handleSignInCallback();
   }
 
   function test_handleSignInCallback_stateDoesNotMatch()
